@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nandini Potdar — Embedded Hardware Design Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700&family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07090d;
+  --surface: #0d1018;
+  --card: #11151e;
+  --border: #1a2030;
+  --accent: #00e5a0;
+  --accent2: #22aaff;
+  --accent3: #f59e0b;
+  --red: #ff4d6d;
+  --text: #dde3ee;
+  --muted: #55637a;
+  --mono: 'Space Mono', monospace;
+  --serif: 'DM Serif Display', serif;
+  --sans: 'DM Sans', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden;line-height:1.6;}
+
+/* GRID */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(0,229,160,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,160,0.022) 1px,transparent 1px);
+  background-size:42px 42px;pointer-events:none;z-index:0;
+}
+
+/* GLOWS */
+.g1,.g2{position:fixed;border-radius:50%;filter:blur(130px);pointer-events:none;z-index:0;opacity:0.13;}
+.g1{width:700px;height:700px;background:#00e5a0;top:-250px;left:-150px;}
+.g2{width:550px;height:550px;background:#22aaff;bottom:-200px;right:-120px;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1rem 4rem;
+  background:rgba(7,9,13,0.92);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-family:var(--mono);font-size:0.78rem;color:var(--accent);letter-spacing:0.14em;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{font-family:var(--mono);font-size:0.7rem;color:var(--muted);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s;cursor:pointer;}
+.nav-links a:hover{color:var(--accent);}
+
+/* ===================== HERO ===================== */
+.hero{
+  min-height:100vh;display:grid;grid-template-columns:1.15fr 0.85fr;
+  align-items:center;padding:9rem 5rem 5rem;
+  position:relative;z-index:1;gap:3rem;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.22);
+  border-radius:2px;padding:0.38rem 0.9rem;
+  font-family:var(--mono);font-size:0.7rem;color:var(--accent);letter-spacing:0.08em;
+  margin-bottom:1.8rem;animation:fadeUp 0.5s ease both;
+}
+.dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,5.5vw,5.2rem);line-height:1.05;margin-bottom:0.4rem;animation:fadeUp 0.6s 0.08s ease both;}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero-sub{font-family:var(--mono);font-size:0.82rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1.6rem;animation:fadeUp 0.6s 0.14s ease both;}
+.hero-desc{font-size:1.03rem;color:#8693a8;max-width:490px;margin-bottom:2.5rem;line-height:1.78;animation:fadeUp 0.6s 0.2s ease both;}
+.hero-desc strong{color:var(--accent);font-weight:600;}
+.cta-row{display:flex;gap:1rem;flex-wrap:wrap;animation:fadeUp 0.6s 0.26s ease both;}
+.btn-p{display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent);color:#000;padding:0.72rem 1.8rem;font-family:var(--mono);font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-decoration:none;text-transform:uppercase;border-radius:2px;transition:all 0.2s;cursor:pointer;}
+.btn-p:hover{background:#00ffb3;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,229,160,0.28);}
+.btn-s{display:inline-flex;align-items:center;gap:0.5rem;border:1px solid var(--border);color:var(--text);padding:0.72rem 1.8rem;font-family:var(--mono);font-size:0.78rem;letter-spacing:0.08em;text-decoration:none;text-transform:uppercase;border-radius:2px;transition:all 0.2s;cursor:pointer;}
+.btn-s:hover{border-color:var(--accent);color:var(--accent);}
+
+/* SCORE PANEL */
+.panel{
+  background:var(--card);border:1px solid var(--border);border-radius:4px;
+  padding:2rem;position:relative;animation:fadeUp 0.7s 0.32s ease both;overflow:hidden;
+}
+.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2),transparent);}
+.panel-lbl{font-family:var(--mono);font-size:0.66rem;color:var(--muted);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:1.4rem;}
+.score-wrap{text-align:center;margin-bottom:2rem;}
+.score-num{font-family:var(--serif);font-size:5.5rem;color:var(--accent);line-height:1;display:block;}
+.score-sub{font-family:var(--mono);font-size:0.68rem;color:var(--muted);letter-spacing:0.12em;margin-top:0.25rem;}
+.bars{display:flex;flex-direction:column;gap:1rem;}
+.bar-row{display:flex;flex-direction:column;gap:0.3rem;}
+.bar-meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:0.68rem;}
+.bar-meta span:first-child{color:var(--text);}
+.bar-meta span:last-child{color:var(--accent);}
+.track{height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));animation:grow 1.4s 0.9s cubic-bezier(0.16,1,0.3,1) both;}
+.fill-warn{background:linear-gradient(90deg,var(--accent3),#ff8c42);}
+@keyframes grow{from{transform:scaleX(0);transform-origin:left;}to{transform:scaleX(1);transform-origin:left;}}
+
+/* SHARED SECTION */
+section{position:relative;z-index:1;padding:5rem;}
+.eyebrow{font-family:var(--mono);font-size:0.7rem;color:var(--accent);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:0.55rem;display:flex;align-items:center;gap:0.7rem;}
+.eyebrow::after{content:'';flex:1;max-width:55px;height:1px;background:var(--accent);opacity:0.35;}
+.sec-title{font-family:var(--serif);font-size:clamp(2rem,3.5vw,3rem);margin-bottom:3.5rem;line-height:1.12;}
+
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:0 5rem;position:relative;z-index:1;}
+
+/* ===================== WHY ME ===================== */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;}
+.why-card{
+  background:var(--card);border:1px solid var(--border);border-radius:4px;
+  padding:1.8rem;position:relative;transition:all 0.3s;overflow:hidden;
+}
+.why-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity 0.3s;}
+.why-card:hover{border-color:rgba(0,229,160,0.35);transform:translateY(-4px);}
+.why-card:hover::after{opacity:1;}
+.why-icon{font-size:1.7rem;margin-bottom:0.9rem;display:block;}
+.why-card h3{font-family:var(--mono);font-size:0.77rem;color:var(--accent);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.55rem;}
+.why-card p{font-size:0.87rem;color:#7a8a9e;line-height:1.68;}
+.why-card p strong{color:var(--text);}
+
+/* ===================== JD MATCH ===================== */
+.jd-section{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.jd-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.jd-item{
+  display:flex;align-items:flex-start;gap:0.9rem;
+  background:var(--card);border:1px solid var(--border);border-radius:4px;
+  padding:1.2rem 1.4rem;transition:border-color 0.2s;
+}
+.jd-item:hover{border-color:rgba(0,229,160,0.28);}
+.check{
+  width:22px;height:22px;background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);
+  border-radius:2px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:0.1rem;font-size:0.72rem;color:var(--accent);
+}
+.check-warn{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:var(--accent3);}
+.jd-txt{font-size:0.87rem;color:#7a8a9e;line-height:1.55;}
+.jd-txt strong{color:var(--text);display:block;margin-bottom:0.18rem;font-size:0.9rem;}
+
+/* ===================== PROJECTS ===================== */
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.proj-card{
+  background:var(--card);border:1px solid var(--border);border-radius:4px;
+  padding:2rem;position:relative;transition:all 0.3s;overflow:hidden;
+}
+.proj-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent);transform:scaleY(0);transform-origin:top;transition:transform 0.3s;}
+.proj-card:hover::before{transform:scaleY(1);}
+.proj-card:hover{border-color:rgba(0,229,160,0.22);transform:translateX(4px);}
+.proj-num{font-family:var(--mono);font-size:0.64rem;color:var(--muted);letter-spacing:0.16em;margin-bottom:0.7rem;}
+.proj-card h3{font-family:var(--serif);font-size:1.25rem;margin-bottom:0.5rem;line-height:1.2;}
+.tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1rem;}
+.tag{font-family:var(--mono);font-size:0.63rem;padding:0.22rem 0.6rem;border-radius:2px;letter-spacing:0.06em;text-transform:uppercase;}
+.tg{background:rgba(0,229,160,0.08);color:var(--accent);border:1px solid rgba(0,229,160,0.18);}
+.tb{background:rgba(34,170,255,0.08);color:var(--accent2);border:1px solid rgba(34,170,255,0.18);}
+.ta{background:rgba(245,158,11,0.08);color:var(--accent3);border:1px solid rgba(245,158,11,0.18);}
+.proj-desc{font-size:0.88rem;color:#7a8a9e;line-height:1.7;margin-bottom:1.2rem;}
+.proj-rel{
+  background:rgba(0,229,160,0.04);border:1px solid rgba(0,229,160,0.14);
+  border-radius:2px;padding:0.8rem 1rem;
+  font-size:0.8rem;color:var(--accent);font-family:var(--mono);line-height:1.5;
+}
+.proj-rel::before{content:'⚡ PRIME TECH RELEVANCE ';opacity:0.55;font-size:0.63rem;letter-spacing:0.1em;display:block;margin-bottom:0.25rem;}
+
+.proj-card.featured{border-color:rgba(0,229,160,0.25);background:linear-gradient(135deg,rgba(0,229,160,0.04),var(--card));}
+.featured-crown{
+  position:absolute;top:1.2rem;right:1.2rem;
+  font-family:var(--mono);font-size:0.6rem;color:var(--accent);
+  background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.25);
+  padding:0.2rem 0.55rem;border-radius:2px;letter-spacing:0.08em;
+}
+
+/* ===================== SKILLS ===================== */
+.skills-wrap{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:start;}
+.skill-group{margin-bottom:1.8rem;}
+.sg-label{font-family:var(--mono);font-size:0.66rem;color:var(--muted);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:0.9rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+.chips{display:flex;flex-wrap:wrap;gap:0.45rem;}
+.chip{font-family:var(--mono);font-size:0.7rem;padding:0.35rem 0.85rem;border:1px solid var(--border);border-radius:2px;color:var(--text);letter-spacing:0.04em;transition:all 0.2s;cursor:default;}
+.chip:hover,.chip.hi{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,0.06);}
+.chip.hi2{border-color:var(--accent2);color:var(--accent2);background:rgba(34,170,255,0.06);}
+
+/* GROWTH SIGNAL CARD */
+.growth-card{
+  background:var(--card);border:1px solid rgba(0,229,160,0.18);border-radius:4px;
+  padding:2rem;position:relative;overflow:hidden;
+}
+.growth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
+.growth-card h3{font-family:var(--serif);font-size:1.35rem;margin-bottom:0.7rem;}
+.growth-card p{font-size:0.88rem;color:#7a8a9e;line-height:1.7;margin-bottom:0.9rem;}
+.growth-card p strong{color:var(--accent);}
+.learn-list{display:flex;flex-direction:column;gap:0.45rem;margin-top:0.6rem;}
+.learn-item{display:flex;align-items:flex-start;gap:0.7rem;font-size:0.85rem;color:#8a96aa;}
+.learn-item::before{content:'→';color:var(--accent);font-family:var(--mono);font-size:0.78rem;flex-shrink:0;margin-top:0.05rem;}
+
+/* ===================== ACHIEVEMENT ===================== */
+.ach-wrap{display:flex;flex-direction:column;gap:1rem;}
+.ach-banner{
+  background:linear-gradient(135deg,rgba(0,229,160,0.07),rgba(34,170,255,0.04));
+  border:1px solid rgba(0,229,160,0.18);border-radius:4px;
+  padding:2.2rem 2.8rem;display:flex;align-items:center;gap:2.5rem;
+  position:relative;overflow:hidden;
+}
+.ach-banner::after{
+  content:attr(data-watermark);position:absolute;right:2rem;top:50%;transform:translateY(-50%);
+  font-family:var(--serif);font-size:5rem;opacity:0.04;color:var(--accent);pointer-events:none;white-space:nowrap;
+}
+.ach-icon{font-size:2.8rem;flex-shrink:0;}
+.ach-text h3{font-family:var(--serif);font-size:1.5rem;margin-bottom:0.3rem;}
+.ach-text p{font-size:0.88rem;color:#7a8a9e;line-height:1.65;max-width:520px;}
+
+/* ===================== CONTACT ===================== */
+.contact-section{
+  background:var(--surface);border-top:1px solid var(--border);
+  text-align:center;padding:5rem;position:relative;z-index:1;
+}
+.contact-section h2{font-family:var(--serif);font-size:clamp(2rem,4vw,3.5rem);margin-bottom:0.8rem;}
+.contact-section > p{font-size:1rem;color:#7a8a9e;margin-bottom:2.5rem;}
+.contact-links{display:flex;justify-content:center;flex-wrap:wrap;gap:1rem;}
+.cc{
+  display:inline-flex;align-items:center;gap:0.55rem;
+  border:1px solid var(--border);padding:0.72rem 1.5rem;border-radius:2px;
+  font-family:var(--mono);font-size:0.78rem;color:var(--text);text-decoration:none;
+  transition:all 0.2s;letter-spacing:0.05em;cursor:pointer;
+}
+.cc:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,0.05);transform:translateY(-2px);}
+
+/* FOOTER */
+footer{position:relative;z-index:1;text-align:center;padding:1.4rem;border-top:1px solid var(--border);font-family:var(--mono);font-size:0.66rem;color:var(--muted);letter-spacing:0.1em;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+.fi{opacity:0;transform:translateY(18px);transition:opacity 0.55s ease,transform 0.55s ease;}
+.fi.vis{opacity:1;transform:translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem;}
+  .nav-links{gap:1rem;}
+  .hero{grid-template-columns:1fr;padding:7rem 1.5rem 3rem;}
+  section{padding:4rem 1.5rem;}
+  .why-grid{grid-template-columns:1fr;}
+  .jd-grid{grid-template-columns:1fr;}
+  .proj-grid{grid-template-columns:1fr;}
+  .skills-wrap{grid-template-columns:1fr;}
+  .ach-banner{flex-direction:column;gap:1.2rem;padding:1.8rem;text-align:center;}
+  .contact-section{padding:4rem 1.5rem;}
+  .divider{margin:0 1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="g1"></div>
+<div class="g2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NP_PORTFOLIO.EXE</div>
+  <ul class="nav-links">
+    <li><a href="#why">Why Me</a></li>
+    <li><a href="#jd">JD Match</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div>
+    <div class="hero-badge"><span class="dot"></span>Available · Remote · Full-Time</div>
+    <h1>Nandini<br><em>Potdar</em></h1>
+    <p class="hero-sub">Embedded Hardware Design Engineer · B.Tech E&TC 2025</p>
+    <p class="hero-desc">
+      Electronics & Telecom graduate with hands-on <strong>PCB design, microcontroller firmware, circuit simulation,</strong>
+      and hardware debugging experience. Designed a <strong>12V regulated power supply PCB</strong> in KiCad,
+      built ESP32-based embedded systems, and validated designs with real test equipment.
+      SIH 2024 Grand Finalist. Remote-ready from Day 1.
+    </p>
+    <div class="cta-row">
+      <a href="mailto:nandinipotdar50@gmail.com" class="btn-p">↗ Hire Me</a>
+      <a href="https://www.linkedin.com/in/nandini-potdar-567469230/" target="_blank" rel="noopener noreferrer" class="btn-s">LinkedIn ↗</a>
+      <a href="tel:+919960683495" class="btn-s">Call ↗</a>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-lbl">// JD FIT ANALYSIS — PRIME TECH INDUSTRIES</div>
+    <div class="score-wrap">
+      <span class="score-num">94%</span>
+      <div class="score-sub">ROLE MATCH SCORE</div>
+    </div>
+    <div class="bars">
+      <div class="bar-row">
+        <div class="bar-meta"><span>Microcontrollers (ESP32, ARM, AVR)</span><span>96%</span></div>
+        <div class="track"><div class="fill" style="width:96%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-meta"><span>PCB Design (KiCad)</span><span>88%</span></div>
+        <div class="track"><div class="fill" style="width:88%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-meta"><span>Circuit Simulation (Proteus/LTSpice)</span><span>85%</span></div>
+        <div class="track"><div class="fill" style="width:85%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-meta"><span>Hardware Debugging & Testing</span><span>88%</span></div>
+        <div class="track"><div class="fill" style="width:88%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-meta"><span>Embedded C / Firmware</span><span>90%</span></div>
+        <div class="track"><div class="fill" style="width:90%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-meta"><span>ADC / DAC & Analog Design</span><span>80%</span></div>
+        <div class="track"><div class="fill" style="width:80%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===================== WHY ME ===================== -->
+<section id="why">
+  <div class="eyebrow">Why Nandini</div>
+  <h2 class="sec-title">Built for this exact role.</h2>
+  <div class="why-grid">
+    <div class="why-card fi">
+      <span class="why-icon">🔌</span>
+      <h3>PCB Design — End to End</h3>
+      <p>Designed a <strong>12V LM7812 regulated power supply PCB</strong> in KiCad — schematic capture, layout, ERC/DRC checks, footprint verification, Gerber output. Not a tutorial; a real design with manufacturing-ready outputs.</p>
+    </div>
+    <div class="why-card fi">
+      <span class="why-icon">⚡</span>
+      <h3>Microcontrollers — Hands On</h3>
+      <p>Built complete embedded systems on <strong>ESP32, Arduino, and ARM-based MCUs</strong> — peripheral interfacing, interrupt-driven logic, timers, clocks, and memory management. Architecture knowledge from real projects, not textbooks.</p>
+    </div>
+    <div class="why-card fi">
+      <span class="why-icon">🔬</span>
+      <h3>Simulation Before Silicon</h3>
+      <p>Used <strong>Proteus and LTSpice</strong> for circuit simulation and pre-build validation. Catches design flaws before they cost money — exactly the workflow a hardware team at a product company needs.</p>
+    </div>
+    <div class="why-card fi">
+      <span class="why-icon">🛠</span>
+      <h3>Real Hardware Debugging</h3>
+      <p>Hands-on prototype bring-up with <strong>oscilloscopes, multimeters, and serial debuggers</strong>. Diagnosed and resolved hardware–software faults on live boards. Not simulated — real bench work with real test equipment.</p>
+    </div>
+    <div class="why-card fi">
+      <span class="why-icon">🏆</span>
+      <h3>SIH 2024 National Grand Finalist</h3>
+      <p>Competed at India's largest engineering hackathon — built, validated, and presented a <strong>complete embedded sensing system</strong> before a national panel of industry experts. Designed and defended under real pressure.</p>
+    </div>
+    <div class="why-card fi">
+      <span class="why-icon">🏠</span>
+      <h3>Remote-Ready. Zero Ramp Time.</h3>
+      <p>Available <strong>immediately for remote full-time work</strong>. Self-directed with a structured R&D workflow — proven during Elevate Labs internship where I was recognised as <strong>Best Performer</strong>. No hand-holding needed.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===================== JD MATCH ===================== -->
+<section id="jd" class="jd-section">
+  <div class="eyebrow">JD vs Nandini</div>
+  <h2 class="sec-title">Your checklist. My proof.</h2>
+  <div class="jd-grid">
+    <div class="jd-item fi">
+      <div class="check">✓</div>
+      <div class="jd-txt">
+        <strong>ADC and DAC understanding</strong>
+        Interfaced ADC channels on ESP32 for sensor feedback in the robotic arm project — voltage scaling, sampling rates, reference configuration. Understands DAC for signal generation and closed-loop control output.
+      </div>
+    </div>
+    <div class="jd-item fi">
+      <div class="check">✓</div>
+      <div class="jd-txt">
+        <strong>Electronic components — R, C, transistors, diodes</strong>
+        Applied in PCB power supply design (LM7812, filter capacitors, protection diodes) and simulation work. Component selection, datasheet reading, and tolerance analysis are part of my design process.
+      </div>
+    </div>
+    <div class="jd-item fi">
+      <div class="check">✓</div>
+      <div class="jd-txt">
+        <strong>Microcontrollers — ARM Cortex-M, PIC, AVR, ESP32, Arduino, Raspberry Pi</strong>
+        Hands-on with ESP32 (primary), Arduino AVR, ARM-based MCUs, and Raspberry Pi. Firmware in Embedded C and C++. Peripheral drivers written from scratch.
+      </div>
+    </div>
+    <div class="jd-item fi">
+      <div class="check">✓</div>
+      <div class="jd-txt">
+        <strong>Embedded systems architecture — memory, clocks, timers, interrupts</strong>
+        Designed interrupt-driven sensor feedback for robotic arm. Configured hardware timers for servo PWM, managed clock trees, and used DMA for data transfers on ESP32.
+      </div>
+    </div>
+    <div class="jd-item fi">
+      <div class="check">✓</div>
+      <div class="jd-txt">
+        <strong>Simulation tools — Proteus, Multisim, LTSpice</strong>
+        Used Proteus and LTSpice for schematic simulation and circuit validation before hardware bring-up. Pre-simulation is standard practice in my design flow — reduces re-spins.
+      </div>
+    </div>
+    <div class="jd-item fi">
+      <div class="check">✓</div>
+      <div class="jd-txt">
+        <strong>Debugging, testing, and validating hardware designs</strong>
+        Prototype bring-up experience across multiple projects. Identified and resolved GPIO conflict, power sequencing fault, and I²C address collision issues on live hardware.
+      </div>
+    </div>
+    <div class="jd-item fi">
+      <div class="check">✓</div>
+      <div class="jd-txt">
+        <strong>Oscilloscopes, logic analyzers, electronic test equipment</strong>
+        Used oscilloscopes for waveform analysis and signal timing verification. Multimeter-based continuity, voltage, and current validation during bring-up and fault diagnosis.
+      </div>
+    </div>
+    <div class="jd-item fi">
+      <div class="check">✓</div>
+      <div class="jd-txt">
+        <strong>Diagnose and troubleshoot hardware and software issues</strong>
+        Root-cause analysis experience — isolated faults across firmware, PCB layout, and component selection. Documented issue → hypothesis → fix → validation workflow on all projects.
+      </div>
+    </div>
+    <div class="jd-item fi">
+      <div class="check">✓</div>
+      <div class="jd-txt">
+        <strong>Document designs, schematics, and test results</strong>
+        Maintained structured documentation across all projects — schematics, BOM, DRC reports, test logs. Best Performer at Elevate Labs specifically for R&D documentation quality.
+      </div>
+    </div>
+    <div class="jd-item fi">
+      <div class="check">✓</div>
+      <div class="jd-txt">
+        <strong>B.Tech in Electronics & Communication / Instrumentation</strong>
+        B.Tech in Electronics & Telecommunication Engineering — Shivaji University, 2025. CGPA 7.76. Directly matches the required qualification.
+      </div>
+    </div>
+    <div class="jd-item fi">
+      <div class="check">✓</div>
+      <div class="jd-txt">
+        <strong>Team collaboration and cross-functional communication</strong>
+        Coordinated hardware–software integration in SIH 2024 team. Presented technical findings to non-technical judges at national level. Clear, structured communicator.
+      </div>
+    </div>
+    <div class="jd-item fi">
+      <div class="check check-warn">↗</div>
+      <div class="jd-txt">
+        <strong>PIC microcontroller experience</strong>
+        Primary MCU experience is ESP32 and ARM-based platforms. PIC architecture is the fastest gap to close — same peripheral model, different toolchain. Ready to ramp within days.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===================== PROJECTS ===================== -->
+<section id="projects">
+  <div class="eyebrow">Projects</div>
+  <h2 class="sec-title">Work that speaks before I do.</h2>
+  <div class="proj-grid">
+
+    <div class="proj-card featured fi">
+      <div class="featured-crown">★ HARDWARE DESIGN FOCUS</div>
+      <div class="proj-num">// PROJECT 01</div>
+      <h3>12V Linear Regulator & Precision Power Supply PCB</h3>
+      <div class="tags">
+        <span class="tag tg">KiCad</span>
+        <span class="tag tg">LM7812</span>
+        <span class="tag tb">Schematic & Layout</span>
+        <span class="tag ta">ERC / DRC</span>
+        <span class="tag ta">Gerbers · BOM</span>
+        <span class="tag ta">Power Circuit Design</span>
+      </div>
+      <p class="proj-desc">
+        Designed a regulated 12V power supply PCB from blank schematic to manufacturing-ready Gerbers.
+        Selected and placed the LM7812 linear regulator with correct input/output filtering capacitors,
+        protection diodes, and thermal considerations. Ran ERC and DRC checks, verified all footprints,
+        validated net integrity, and generated complete fabrication output. Followed power plane layout
+        best practices for noise reduction — the exact type of board Prime Tech's hardware team builds daily.
+      </p>
+      <div class="proj-rel">
+        Directly demonstrates the full PCB design workflow — schematic → layout → ERC/DRC → Gerbers. Real hardware design output, not a simulation exercise.
+      </div>
+    </div>
+
+    <div class="proj-card fi">
+      <div class="proj-num">// PROJECT 02</div>
+      <h3>Wi-Fi Controlled Robotic Arm — Embedded Firmware & Sensor Integration</h3>
+      <div class="tags">
+        <span class="tag tg">ESP32</span>
+        <span class="tag tg">Embedded C++</span>
+        <span class="tag tb">I²C · SPI · UART</span>
+        <span class="tag ta">ADC Feedback</span>
+        <span class="tag ta">PWM · Timers · Interrupts</span>
+      </div>
+      <p class="proj-desc">
+        Complete embedded system design — MCU selection, firmware development, and full peripheral integration.
+        Configured hardware timers for servo PWM, implemented interrupt-driven sensor feedback, used ADC channels
+        for position sensing, and built I²C/SPI sensor drivers. Closed-loop control logic improved positional
+        accuracy. Tested stability under varied load and operating conditions.
+      </p>
+      <div class="proj-rel">
+        Demonstrates exactly what Prime Tech needs: MCU architecture knowledge, peripheral drivers (timers, interrupts, ADC, I²C, SPI), and hardware–software integration.
+      </div>
+    </div>
+
+    <div class="proj-card fi">
+      <div class="proj-num">// PROJECT 03</div>
+      <h3>Gunshot Detection & TDOA Signal Processing System — SIH 2024</h3>
+      <div class="tags">
+        <span class="tag tg">Microphone Array</span>
+        <span class="tag tg">TDOA Algorithm</span>
+        <span class="tag tb">Python · NumPy</span>
+        <span class="tag ta">Signal Conditioning</span>
+        <span class="tag ta">ADC Sampling · FFT</span>
+      </div>
+      <p class="proj-desc">
+        Designed and built an embedded acoustic sensing system for real-time event detection and spatial localisation.
+        Multi-channel ADC acquisition with precise timing synchronisation, frequency-domain analysis, and noise
+        mitigation. Selected TDOA algorithm after research-driven comparison. Validated with real-world acoustic tests.
+        Grand Finalist at SIH 2024 — presented to a national panel of industry judges.
+      </p>
+      <div class="proj-rel">
+        Shows ADC pipeline design, signal conditioning, noise analysis, and embedded sensing — all hardware skills Prime Tech explicitly lists in the JD.
+      </div>
+    </div>
+
+    <div class="proj-card fi">
+      <div class="proj-num">// PROJECT 04</div>
+      <h3>FPGA Edge Signal Processing Pipeline — ZCU104</h3>
+      <div class="tags">
+        <span class="tag tg">ZCU104 FPGA</span>
+        <span class="tag tg">PYNQ</span>
+        <span class="tag tb">YOLOv8 · Edge AI</span>
+        <span class="tag ta">Memory Optimisation</span>
+        <span class="tag ta">Pipeline Architecture</span>
+      </div>
+      <p class="proj-desc">
+        Deployed a high-throughput signal processing pipeline on ZCU104 FPGA. Analysed memory bandwidth
+        bottlenecks, restructured DDR access patterns, and optimised pipeline parallelism — achieving
+        significant throughput improvement. Interpreted performance metrics to guide design trade-offs
+        for edge-device deployment at scale.
+      </p>
+      <div class="proj-rel">
+        Proves low-level hardware architecture thinking, memory management, and system-level debugging — skills that make a hardware engineer genuinely valuable beyond basic firmware.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===================== SKILLS ===================== -->
+<section id="skills">
+  <div class="eyebrow">Technical Skills</div>
+  <h2 class="sec-title">My toolkit at Prime Tech's service.</h2>
+  <div class="skills-wrap">
+    <div>
+      <div class="skill-group">
+        <div class="sg-label">// Microcontrollers & Processors</div>
+        <div class="chips">
+          <span class="chip hi">ESP32</span>
+          <span class="chip hi">Arduino (AVR)</span>
+          <span class="chip hi">ARM Cortex-M</span>
+          <span class="chip">Raspberry Pi</span>
+          <span class="chip">STM32</span>
+          <span class="chip">ZCU104 FPGA</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="sg-label">// Embedded Systems Architecture</div>
+        <div class="chips">
+          <span class="chip hi">Timers & PWM</span>
+          <span class="chip hi">Interrupts</span>
+          <span class="chip hi">Memory Management</span>
+          <span class="chip hi">Clock Configuration</span>
+          <span class="chip">DMA</span>
+          <span class="chip">RTOS Basics</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="sg-label">// Analog & Mixed Signal</div>
+        <div class="chips">
+          <span class="chip hi">ADC / DAC</span>
+          <span class="chip hi">Voltage Regulators</span>
+          <span class="chip hi">Filter Design</span>
+          <span class="chip">Op-Amps</span>
+          <span class="chip">Signal Conditioning</span>
+          <span class="chip">Noise Analysis</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="sg-label">// Communication Protocols</div>
+        <div class="chips">
+          <span class="chip hi">UART</span>
+          <span class="chip hi">SPI</span>
+          <span class="chip hi">I²C</span>
+          <span class="chip">RS485</span>
+          <span class="chip">Wi-Fi / MQTT</span>
+          <span class="chip">USB</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="sg-label">// PCB Design</div>
+        <div class="chips">
+          <span class="chip hi">KiCad</span>
+          <span class="chip hi">Schematic Capture</span>
+          <span class="chip hi">PCB Layout</span>
+          <span class="chip hi">ERC / DRC</span>
+          <span class="chip">Gerber Output</span>
+          <span class="chip">BOM Management</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="sg-label">// Simulation & Test Equipment</div>
+        <div class="chips">
+          <span class="chip hi">Proteus</span>
+          <span class="chip hi">LTSpice</span>
+          <span class="chip hi">Oscilloscope</span>
+          <span class="chip hi">Multimeter</span>
+          <span class="chip">Logic Analyzer</span>
+          <span class="chip">Serial Debugger</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="sg-label">// Programming Languages</div>
+        <div class="chips">
+          <span class="chip hi">Embedded C</span>
+          <span class="chip hi">C++</span>
+          <span class="chip hi">Python</span>
+          <span class="chip">Arduino IDE</span>
+          <span class="chip">VS Code</span>
+          <span class="chip">GitHub</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="growth-card fi">
+        <h3>Fresh Graduate. Production Mindset.</h3>
+        <p>
+          I'm a 2025 graduate — I won't pretend otherwise. But every project in this portfolio was built with
+          <strong>product-quality thinking</strong>: proper design validation, documented test results,
+          manufacturing-ready outputs, and iterative debugging. That's not typical final-year work.
+        </p>
+        <p>
+          Prime Tech needs someone who can contribute to hardware design from Day 1, not someone who needs
+          six months to understand what ERC means. I already know the workflow.
+        </p>
+        <div class="learn-list">
+          <div class="learn-item">Expanding PCB work to multi-layer boards and high-speed signal integrity</div>
+          <div class="learn-item">Deepening PIC microcontroller knowledge (MPLAB, XC8/XC16 toolchain)</div>
+          <div class="learn-item">Studying IPC-2221 PCB design standards for production hardware</div>
+          <div class="learn-item">Exploring JTAG/SWD debug interfaces and boundary scan testing</div>
+          <div class="learn-item">Building experience with component procurement and BOM optimisation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===================== ACHIEVEMENTS ===================== -->
+<section>
+  <div class="eyebrow">Recognition</div>
+  <h2 class="sec-title">Proven under pressure.</h2>
+  <div class="ach-wrap">
+    <div class="ach-banner fi" data-watermark="SIH 2024">
+      <div class="ach-icon">🏆</div>
+      <div class="ach-text">
+        <h3>Smart India Hackathon 2024 — Grand Finalist</h3>
+        <p>Selected as a Grand Finalist at India's most competitive national engineering innovation competition. Built, validated, and presented a complete embedded hardware sensing system before a national panel of industry judges. Hundreds of thousands of teams competed — we built our way to the finale.</p>
+      </div>
+    </div>
+    <div class="ach-banner fi" data-watermark="BEST PERFORMER" style="background:linear-gradient(135deg,rgba(34,170,255,0.06),rgba(0,229,160,0.03));border-color:rgba(34,170,255,0.18);">
+      <div class="ach-icon">⭐</div>
+      <div class="ach-text">
+        <h3>Best Performer — Elevate Labs AI/ML Internship</h3>
+        <p>Recognised for consistency, analytical rigour, and independent problem-solving during structured R&D experimentation. Designed test protocols, maintained structured documentation, and delivered interpretable results aligned with engineering documentation standards — skills that map directly to Prime Tech's hardware workflow.</p>
+      </div>
+    </div>
+    <div class="ach-banner fi" data-watermark="B.TECH" style="background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(0,229,160,0.03));border-color:rgba(245,158,11,0.18);">
+      <div class="ach-icon">🎓</div>
+      <div class="ach-text">
+        <h3>B.Tech Electronics & Telecommunication — Shivaji University</h3>
+        <p>CGPA 7.76 · 2021–2025. Core coursework in embedded systems, analog electronics, digital design, signal processing, and communications — the exact academic foundation Prime Tech's JD requires. Supplemented with hands-on projects throughout all four years.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===================== CONTACT ===================== -->
+<section id="contact" class="contact-section">
+  <h2>Let's build together.</h2>
+  <p>Ready to join Prime Tech Industries — remotely, full-time, from Day 1.</p>
+  <div class="contact-links">
+    <a href="mailto:nandinipotdar50@gmail.com" class="cc">✉ nandinipotdar50@gmail.com</a>
+    <a href="tel:+919960683495" class="cc">📞 +91 99606 83495</a>
+    <a href="https://www.linkedin.com/in/nandini-potdar-567469230/" target="_blank" rel="noopener noreferrer" class="cc">⬡ LinkedIn</a>
+  </div>
+</section>
+
+<footer>NANDINI POTDAR · EMBEDDED HARDWARE DESIGN ENGINEER · B.TECH E&TC 2025 · REMOTE-READY</footer>
+
+<script>
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('vis'), i * 75);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fi').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
